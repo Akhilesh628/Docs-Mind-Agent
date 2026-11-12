@@ -1,0 +1,72 @@
+
+server:
+  port: 8082
+
+spring:
+  application:
+    name: pdf-excel-app
+
+  # PostgreSQL Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5433/ragdb
+    username: postgres
+#    password: ${DB_PASSWORD}
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  ai:
+
+    # Select Groq through OpenAI-compatible client
+    model:
+      chat: openai
+      embedding: ollama
+
+    # Groq Chat Configuration
+    openai:
+      base-url: https://api.groq.com/openai/v1
+      api-key: ${GROQ_API_KEY}
+#      api-key: gsk_mYxgqCrg2RIv1lPralPOWGdyb3FYRhhhUczcxiPt2oBQ6mYdc3L651
+
+      chat:
+        options:
+          model: openai/gpt-oss-20b
+          temperature: 0.3
+
+    # Ollama Embedding Configuration
+    ollama:
+      base-url: http://localhost:11434
+
+      embedding:
+        model: nomic-embed-text
+
+      init:
+        pull-model-strategy: never
+
+    # PostgreSQL PGVector Configuration
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 768
+        initialize-schema: true
+        table-name: vector_store
+
+  # File Upload Configuration
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 25MB
+
+# Swagger Configuration
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+  api-docs:
+    path: /v3/api-docs
+
+# Logging
+logging:
+  level:
+    com.example.pdf_excel_app: DEBUG
+    org.springframework.ai: INFO
